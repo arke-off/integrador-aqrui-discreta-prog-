@@ -1,7 +1,16 @@
+/*
+)El juego consta de 3 instancias
+1er instancia (a)solicitud de nombre    (b)saludo con explicacion reglas	(c)mostrar vidas 7S
+2da instancia (a)elegir opcion          (b)mostrar acierto,probar disparo   (c)mostrar progreso de vidas
+3ra instancia (a)anuncio de resultado   (b)mostrar vidas en 0               (c)solicitar iniciar/salir
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <windows.h>
+#include "colors.h" //Libreria de colorcitos.
 
 //Un par de variables extra, básicamente para comodidad mía (ademas, no queda tan lindo asi nomas).
 #define TAMANO 3
@@ -12,6 +21,7 @@ int pregunta();
 void balas_aleatorias(int tambor[TAMANO][TAMANO]);
 void mostrar_vida_7_segmentos(int vida);
 void guardar_puntos(const char* nombre, int puntos);
+void temporizadorGatillo();
 
 main() {
     int vida_usuario = 5;
@@ -25,60 +35,73 @@ main() {
     
     srand(time(NULL));
     balas_aleatorias(tambor);
-
-    //Se solicita el nombre del jugador.
-    printf("Ingrese su nombre: ");
+	printf(MAIN ); //Seteamos gracias a colors.h el color principal.
+//Primer Instancia
+//Se solicita el nombre del jugador.
+    printf("Ingrese su ");
+    printf(PLAYER "nombre " MAIN);
+    printf("para iniciar el juego: " PLAYER);
     gets(nombre);
-    
-    printf("Bienvenido %s!", nombre);
+    system("cls");
+    printf(MAIN "Bienvenido ");
+	printf(PLAYER "%s!\n" MAIN, nombre);
+    printf("\nEste juego (");
+    printf(PLAYER "usuario " MAIN);
+    printf(" VS ");
+    printf(MACHINE "maquina" MAIN);
+    printf(") consta de responder preguntas.\n");
+    printf("Ambos comienzan con 5 vidas.\n");
+    printf("Si uno de los 2 responde bien entonces apunta al enemigo y ""Prueba disparar"".\n");
+       
+     printf("\nPresione ENTER para continuar...");
+    getchar();
     
     do {
-        printf("\nPresione ENTER para continuar...");
-        getchar();
         
         acertar = pregunta();
 
         if (acertar == 1) { //El jugador responde correctamente.
-            printf("Su respuesta fue correcta, apuntando al contrincante...\n");
-            getchar();
+        	printf(ACCEPT "Su respuesta fue correcta, apuntando al contrincante.\n" MAIN);
+            temporizadorGatillo();
+			//getchar(); //en vez de presionar enter realizar una cuenta regresiva
 
             if (tambor[i][j] == 1) { //Hay bala en el tambor.
                 vida_ia--;
-                printf("El disparo acerto, la vida del contrincante es ahora de %i.\n", vida_ia);
+                printf(ACCEPT "\nEl disparo acerto, la vida del contrincante es ahora de %i.\n" MAIN, vida_ia);
             } else {
-                printf("El disparo no salio...\n");
+                printf(REJECT "\nEl disparo no salio...\n" MAIN);
             }
 
-            //Se añaden puntos y reseten los errores consecutivos.
-            puntos += (turno < 3) ? 10 : 5; // Menos puntos después del 3er turno
+            //Se anaden puntos y reseten los errores consecutivos.
+            puntos += (turno < 3) ? 10 : 5; // Menos puntos despues del 3er turno
             aciertos_consecutivos++;
             errores_consecutivos = 0;
 
-            //Vida extra para el jugador después de 3 aciertos consecutivos.
+            //Vida extra para el jugador despues de 3 aciertos consecutivos.
             if (aciertos_consecutivos == 3 && vida_usuario < MAX_VIDA) {
                 vida_usuario++;
-                printf("Bonus! Has ganado 1 vida adicional.\n");
+                printf(PLAYER "Bonus! Has ganado 1 vida adicional.\n" MAIN);
                 aciertos_consecutivos = 0;
             }
         } else { //El jugador responde incorrectamente.
-            printf("Su respuesta fue incorrecta, apuntando a usted...\n");
+            printf(REJECT "Su respuesta fue incorrecta, apuntando a usted...\n" MAIN);
             getchar();
 
             if (tambor[i][j] == 1) { //Hay bala en el tambor.
                 vida_usuario--;
-                printf("El disparo acerto, tu vida es ahora de %i.\n", vida_usuario);
+                printf(REJECT "\nEl disparo acerto, tu vida es ahora de %i.\n" MAIN, vida_usuario);
             } else {
-                printf("El disparo no salio...\n");
+                printf(ACCEPT "\nEl disparo no salio...\n" MAIN);
             }
 
             //Se resetean los aciertos consecutivos y suman los errores.
             aciertos_consecutivos = 0;
             errores_consecutivos++;
 
-            //Vida extra para el contrincante después de 3 errores consecutivos.
+            //Vida extra para el contrincante despues de 3 errores consecutivos.
             if (errores_consecutivos == 3 && vida_ia < MAX_VIDA) {
                 vida_ia++;
-                printf("El contrincante gana 1 vida adicional!\n");
+                printf(MACHINE "El contrincante gana 1 vida adicional!\n" MAIN);
                 errores_consecutivos = 0;
             }
         }
@@ -99,22 +122,22 @@ main() {
         }
 
         //Mostrar vidas en formato 7 segmentos.
-        printf("\nVida del usuario:\n");
+        printf("\nVida del usuario:\n" PLAYER);
         mostrar_vida_7_segmentos(vida_usuario);
-        printf("Vida del contrincante:\n");
+        printf(MAIN "Vida del contrincante:\n" MACHINE);
         mostrar_vida_7_segmentos(vida_ia);
 		
-		printf("\nPresione ENTER para continuar...");
+		printf(MAIN "\nPresione ENTER para continuar...");
         getchar();
-		system("cls");
+	//	system("cls");
 		
     } while (vida_usuario > 0 && vida_ia > 0);
 
     if (vida_usuario > 0) {
-        printf("Felicidades %s! Ganaste.\n", nombre);
+        printf(MAIN "Felicidades %s! Ganaste.\n", nombre);
         puntos += PUNTOS_EXTRA; //Puntos extra por ganar.
     } else {
-        printf("Lo siento, has perdido.\n");
+        printf(MAIN "Lo siento, has perdido.\n");
     }
 
     guardar_puntos(nombre, puntos);
@@ -211,4 +234,15 @@ int pregunta() {
 	//preguntas sobre la 2da guerra mundial y guerra fria
 	//cuales son los operadores logicos
 	//AGREGAR MAS
+}
+
+void temporizadorGatillo(){
+int i;
+char temporizadorVector[15]="3...2...1...\n";
+for (i=0;	i<12; i++){
+	printf("%c",temporizadorVector[i]);
+	Sleep(200);
+}
+
+
 }
