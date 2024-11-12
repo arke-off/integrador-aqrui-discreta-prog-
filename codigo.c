@@ -10,13 +10,14 @@
 #include <string.h>
 #include <time.h>
 #include <windows.h>
-#include "colors.h" //Libreria de colorcitos.
+#include "colors.h" //Libreria de colores modificada.
 
 //Un par de variables extra, básicamente para comodidad mía (ademas, no queda tan lindo asi nomas).
 #define TAMANO 3
 #define MAX_VIDA 9
 #define PUNTOS_EXTRA 5
 
+void pantallaCompleta();
 int pregunta();
 void balas_aleatorias(int tambor[TAMANO][TAMANO]);
 void mostrar_vida_7_segmentos(int vida_usuario, int vida_ia);
@@ -24,6 +25,8 @@ void guardar_puntos(const char* nombre, int puntos);
 void temporizadorGatillo();
 
 main() {
+	
+	pantallaCompleta();
     int vida_usuario = 5;
     int vida_ia = 5;
     int acertar, puntos = 0, turno = 1;
@@ -45,14 +48,15 @@ main() {
     system("cls");
     printf(LINE"=================================================================================\n"MAIN);
     printf(MAIN "\t\t\t\tBienvenido ");
-	printf(PLAYER "%s!\n" MAIN, nombre);
+	printf(PLAYER "%s" MAIN, nombre);
+	printf("!\n" MAIN);
     printf("\nEste juego (");
-    printf(PLAYER "usuario " MAIN);
+    printf(PLAYER "usuario" MAIN);
     printf(" VS ");
     printf(MACHINE "maquina" MAIN);
     printf(") consta de responder preguntas.\n");
     printf("Ambos comienzan con 5 vidas.\n");
-    printf("Si uno de los 2 responde bien entonces apunta al enemigo y ""Prueba disparar"".\n");
+    printf("Si uno de los 2 responde bien entonces apunta al enemigo y ""prueba disparar"".\n");
     printf(LINE"=================================================================================\n"MAIN);
        
      printf("\nPresione ENTER para continuar...");
@@ -72,6 +76,7 @@ main() {
         if (acertar == 1) { //El jugador responde correctamente.
         	printf(ACCEPT "Su respuesta fue correcta, apuntando al contrincante.\n" MAIN);
             temporizadorGatillo();
+            fflush(stdin);
 			//getchar(); //en vez de presionar enter realizar una cuenta regresiva
 
             if (tambor[i][j] == 1) { //Hay bala en el tambor.
@@ -94,7 +99,8 @@ main() {
             }
         } else { //El jugador responde incorrectamente.
             printf(REJECT "Su respuesta fue incorrecta, apuntando a usted...\n" MAIN);
-            getchar();
+            temporizadorGatillo();
+            fflush(stdin);
 
             if (tambor[i][j] == 1) { //Hay bala en el tambor.
                 vida_usuario--;
@@ -127,20 +133,18 @@ main() {
         if (i == 0 && j == 0) {
             turno++;
             balas_aleatorias(tambor);
-            printf("\nSe ha recargado el tambor para el proximo turno.\n");
+            printf(RESET"\nSe ha recargado el tambor para el proximo turno.\n"MAIN);
         }
-
-       
-
-		
+		printf(LINE"\n=================================================================================\n"MAIN);
 		printf(MAIN "\nPresione ENTER para continuar...");
         getchar();
-	//	system("cls");
 		
     } while (vida_usuario > 0 && vida_ia > 0);
 
     if (vida_usuario > 0) {
-        printf(MAIN "Felicidades %s! Ganaste.\n", nombre);
+        printf(MAIN "Felicidades ");
+        printf(PLAYER "%s", nombre);
+        printf(MAIN "! Ganaste.\n");
         puntos += PUNTOS_EXTRA; //Puntos extra por ganar.
     } else {
         printf(MAIN "Lo siento, has perdido.\n");
@@ -217,16 +221,17 @@ int pregunta() {
 	int respuesta = 1;
 	switch (pregunta) {
 		case 1: 
-			printf("En que continente se encuentra Espana?.\n1 - Oceania.\n2 - Asia.\n3 - Europa.\n4 - America del Sur.\n");
+			printf(MAIN"En que continente se encuentra Espana?.\n");
+			printf(RESET"[1] Oceania.\n[2] Asia.\n[3] Europa.\n[4] America del Sur.\n"MAIN);
 			do {
-				printf("Respuesta: ");
+				printf("Respuesta: "RESET);
 				scanf("%i", &respuesta);
 				if (respuesta == 3) {
 					return 1;
 				} else if ((respuesta == 1) || (respuesta == 2) || (respuesta == 4)) {
 					return 2;
 				} else {
-					printf("Opcion no disponible, por favor, elija una opcion entre las disponibles.\n");
+					printf(MAIN"Opcion no disponible, por favor, elija una opcion entre las disponibles.\n");
 				}
 				fflush(stdin);
 			} while ((respuesta < 1) || (respuesta > 4));
@@ -251,11 +256,17 @@ int pregunta() {
 }
 
 void temporizadorGatillo(){
-int i;
-char temporizadorVector[15]="3...2...1...\n";
-for (i=0;	i<12; i++){
-	printf("%c",temporizadorVector[i]);
-	Sleep(200);
+	int i;
+	char temporizadorVector[15]="3...2...1...\n";
+	for (i=0;	i<12; i++){
+		printf("%c",temporizadorVector[i]);
+		Sleep(200);
+	}
 }
 
+void pantallaCompleta(){
+    keybd_event(VK_MENU, 0, 0, 0);      // Presiona la tecla Alt
+    keybd_event(VK_RETURN, 0, 0, 0);    // Presiona la tecla Enter
+    keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0);  // Suelta la tecla Enter
+    keybd_event(VK_MENU, 0, KEYEVENTF_KEYUP, 0);    // Suelta la tecla Alt   
 }
