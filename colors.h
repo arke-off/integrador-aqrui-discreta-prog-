@@ -17,6 +17,7 @@
 #define MACHINE	"\x1B[38;2;255;49;49m"
 #define ACCEPT	"\x1B[38;2;0;255;139m"
 #define REJECT	"\x1B[38;2;255;0;120m"
+#define LINE	"\x1B[38;2;59;104;255m"
 #define RESET   "\x1b[0m"
 //===Color background code===/
 #define BG_BLACK   "\x1B[40m"

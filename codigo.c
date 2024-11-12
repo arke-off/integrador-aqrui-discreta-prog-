@@ -43,7 +43,8 @@ main() {
     printf("para iniciar el juego: " PLAYER);
     gets(nombre);
     system("cls");
-    printf(MAIN "Bienvenido ");
+    printf(LINE"=================================================================================\n"MAIN);
+    printf(MAIN "\t\t\t\tBienvenido ");
 	printf(PLAYER "%s!\n" MAIN, nombre);
     printf("\nEste juego (");
     printf(PLAYER "usuario " MAIN);
@@ -52,12 +53,20 @@ main() {
     printf(") consta de responder preguntas.\n");
     printf("Ambos comienzan con 5 vidas.\n");
     printf("Si uno de los 2 responde bien entonces apunta al enemigo y ""Prueba disparar"".\n");
+    printf(LINE"=================================================================================\n"MAIN);
        
      printf("\nPresione ENTER para continuar...");
     getchar();
     
     do {
+    	system("cls");
+	    printf(LINE"=================================================================================\n"MAIN);
         
+		 //Mostrar vidas en formato 7 segmentos.
+        printf(PLAYER"\nVida del usuario:\t" MAIN);
+        printf(MACHINE "Vida del contrincante:\n" MAIN);
+        mostrar_vida_7_segmentos(vida_usuario, vida_ia);
+        printf("\n");
         acertar = pregunta();
 
         if (acertar == 1) { //El jugador responde correctamente.
@@ -121,12 +130,8 @@ main() {
             printf("\nSe ha recargado el tambor para el proximo turno.\n");
         }
 
-        //Mostrar vidas en formato 7 segmentos.
-        printf(PLAYER"\nVida del usuario:\t" MAIN);
-        printf(MACHINE "Vida del contrincante:\n" MAIN);
-        mostrar_vida_7_segmentos(vida_usuario, vida_ia);
-        //
-        //mostrar_vida_7_segmentos(vida_ia);
+       
+
 		
 		printf(MAIN "\nPresione ENTER para continuar...");
         getchar();
@@ -195,7 +200,7 @@ void mostrar_vida_7_segmentos(int vida_usuario, int vida_ia) {
         {" _ ", "|_|", " _|"}  // 9
     };
 
-    // Imprime cada línea de los displays de ambos jugadores en paralelo
+    // Imprime cada lï¿½nea de los displays de ambos jugadores en paralelo
     int i;
     for (i = 0; i < 3; i++) {
         printf(PLAYER"\t%s\t\t\t"MAIN, segmentos[vida_usuario][i]);
