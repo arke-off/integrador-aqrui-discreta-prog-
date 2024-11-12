@@ -19,7 +19,7 @@
 
 int pregunta();
 void balas_aleatorias(int tambor[TAMANO][TAMANO]);
-void mostrar_vida_7_segmentos(int vida);
+void mostrar_vida_7_segmentos(int vida_usuario, int vida_ia);
 void guardar_puntos(const char* nombre, int puntos);
 void temporizadorGatillo();
 
@@ -122,10 +122,11 @@ main() {
         }
 
         //Mostrar vidas en formato 7 segmentos.
-        printf("\nVida del usuario:\n" PLAYER);
-        mostrar_vida_7_segmentos(vida_usuario);
-        printf(MAIN "Vida del contrincante:\n" MACHINE);
-        mostrar_vida_7_segmentos(vida_ia);
+        printf(PLAYER"\nVida del usuario:\t" MAIN);
+        printf(MACHINE "Vida del contrincante:\n" MAIN);
+        mostrar_vida_7_segmentos(vida_usuario, vida_ia);
+        //
+        //mostrar_vida_7_segmentos(vida_ia);
 		
 		printf(MAIN "\nPresione ENTER para continuar...");
         getchar();
@@ -179,23 +180,31 @@ void guardar_puntos(const char* nombre, int puntos) {
     fclose(archivo);
 }
 
-//Funcion para mostrar un número en formato de 7 segmentos.
-void mostrar_vida_7_segmentos(int vida) {
-    const char* segmentos[10] = {
-        " _ \n| |\n|_|\n", // 0
-        "   \n  |\n  |\n", // 1
-        " _ \n _|\n|_ \n", // 2
-        " _ \n _|\n _|\n", // 3
-        "   \n|_|\n  |\n", // 4
-        " _ \n|_ \n _|\n", // 5
-        " _ \n|_ \n|_|\n", // 6
-        " _ \n  |\n  |\n", // 7
-        " _ \n|_|\n|_|\n", // 8
-        " _ \n|_|\n _|\n"  // 9
+//Funcion para mostrar un numero en formato de 7 segmentos.
+void mostrar_vida_7_segmentos(int vida_usuario, int vida_ia) {
+    const char* segmentos[10][3] = {
+        {" _ ", "| |", "|_|"}, // 0
+        {"   ", "  |", "  |"}, // 1
+        {" _ ", " _|", "|_ "}, // 2
+        {" _ ", " _|", " _|"}, // 3
+        {"   ", "|_|", "  |"}, // 4
+        {" _ ", "|_ ", " _|"}, // 5
+        {" _ ", "|_ ", "|_|"}, // 6
+        {" _ ", "  |", "  |"}, // 7
+        {" _ ", "|_|", "|_|"}, // 8
+        {" _ ", "|_|", " _|"}  // 9
     };
 
-    printf("%s", segmentos[vida]);
+    // Imprime cada l�nea de los displays de ambos jugadores en paralelo
+    int i;
+    for (i = 0; i < 3; i++) {
+        printf(PLAYER"\t%s\t\t\t"MAIN, segmentos[vida_usuario][i]);
+        printf(MACHINE"%s\n"MAIN, segmentos[vida_ia][i]);
+    }
 }
+
+
+
 
 int pregunta() {
 	//Acá están todas las preguntas, están abajo del todo porque su fiaca bajar tanto una y otra vez para arreglar alguna boludés en las otras funciones.
@@ -243,6 +252,5 @@ for (i=0;	i<12; i++){
 	printf("%c",temporizadorVector[i]);
 	Sleep(200);
 }
-
 
 }
