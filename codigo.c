@@ -61,7 +61,7 @@ main() {
        
      printf("\nPresione ENTER para continuar...");
     getchar();
-    
+    //comentario
     do {
     	system("cls");
 	    printf(LINE"=================================================================================\n"MAIN);
