@@ -755,7 +755,3 @@ int pregunta() {
 			break;
 	}
 }
-
-
-
-
