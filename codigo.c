@@ -1,8 +1,6 @@
-/*
-)El juego consta de 3 instancias
-1er instancia (a)solicitud de nombre    (b)saludo con explicacion reglas	(c)mostrar vidas 7S
-2da instancia (a)elegir opcion          (b)mostrar acierto,probar disparo   (c)mostrar progreso de vidas
-3ra instancia (a)anuncio de resultado   (b)mostrar vidas en 0               (c)solicitar iniciar/salir
+/*Trabajo Integrador
+Alumnos: Aylen Correa, Mordka Lucas, Meza Santiago, Noelia Diez, Azcona Matilda 
+Asignaturas: Arquitectura de la computadora - Programación Estructurada - Matematica Discreta
 */
 
 #include <stdio.h>
@@ -12,19 +10,19 @@
 #include <windows.h>
 #include "colors.h" //Libreria de colores modificada.
 
-//Un par de variables extra, básicamente para comodidad mía (ademas, no queda tan lindo asi nomas).
+//defConstantes&Variables
 #define TAMANO 3
 #define MAX_VIDA 9
 #define PUNTOS_EXTRA 5
-
-void pantallaCompleta();
 int preguntas = 1;
+//porototipoFunciones
+void pantallaCompleta();
 int pregunta();
 void balas_aleatorias(int tambor[TAMANO][TAMANO]);
 void mostrar_vida_7_segmentos(int vida_usuario, int vida_ia);
 void guardar_puntos(const char* nombre, int puntos);
 void temporizadorGatillo();
-
+//programaPrincipal
 main() {
 	
 	pantallaCompleta();
@@ -40,13 +38,11 @@ main() {
     srand(time(NULL));
     balas_aleatorias(tambor);
 	printf(MAIN ); //Seteamos gracias a colors.h el color principal.
-//Primer Instancia
-//Se solicita el nombre del jugador.
     printf("Ingrese su ");
     printf(PLAYER "nombre " MAIN);
     printf("para iniciar el juego: " PLAYER);
     gets(nombre);
-    system("cls");
+    system("cls"); //limpia pantalla
     printf(LINE"=================================================================================\n"MAIN);
     printf(MAIN "\t\t\t\tBienvenido ");
 	printf(PLAYER "%s" MAIN, nombre);
@@ -57,13 +53,13 @@ main() {
     printf(MACHINE "maquina" MAIN);
     printf(") consta de responder preguntas.\n");
     printf("Ambos comienzan con 5 vidas.\n");
-    printf("Si respondes bien apuntas al enemigo sino te apuntas a vos mismo � probando disparar !.\n");
+    printf("Si respondes bien apuntas al enemigo sino te apuntas a vos mismo !probando disparar!.\n");
     printf(LINE"=================================================================================\n"MAIN);
+    
     asciiArt();
        
-     printf("\nPresione ENTER para continuar...");
+    printf("\nPresione ENTER para continuar...");
     getchar();
-    //comentario
     do {
     	system("cls");
 	    printf(LINE"=================================================================================\n"MAIN);
@@ -79,12 +75,11 @@ main() {
         	printf(ACCEPT "Su respuesta fue correcta, apuntando al contrincante.\n" MAIN);
             temporizadorGatillo();
             fflush(stdin);
-			//getchar(); //en vez de presionar enter realizar una cuenta regresiva
 
             if (tambor[i][j] == 1) { //Hay bala en el tambor.
                 vida_ia--;
                 printf(ACCEPT "\nEl disparo acerto, la vida del contrincante es ahora de %i.\n" MAIN, vida_ia);
-                Beep(750, 1500); 
+                Beep(750, 1500);  //sonido parametros (frecuencia,duracion)
             } else {
                 printf(REJECT "\nEl disparo no salio...\n" MAIN);
             }
@@ -102,7 +97,7 @@ main() {
             if (tambor[i][j] == 1) { //Hay bala en el tambor.
                 vida_usuario--;
                 printf(REJECT "\nEl disparo acerto, tu vida es ahora de %i.\n" MAIN, vida_usuario);
-                Beep(750, 1500); 
+                Beep(750, 1500); //sonido parametros (frecuencia,duracion)
             } else {
                 printf(ACCEPT "\nEl disparo no salio...\n" MAIN);
             }
@@ -154,6 +149,8 @@ main() {
     return 0;
 }
 
+
+//CreacionFunciones
 void balas_aleatorias(int tambor[TAMANO][TAMANO]) {
 	int i, j, k = 0;
 	int balas = rand()%3 + 1; //Se generan entre 1 y 3 balas de forma aleatoria.
@@ -177,7 +174,7 @@ void balas_aleatorias(int tambor[TAMANO][TAMANO]) {
 	}
 }
 
-//Guarda la puntuación en un archivo de tabla de puntos.
+//Guarda la puntuación en un archivo.
 void guardar_puntos(const char* nombre, int puntos) {
     FILE* archivo = fopen("tabla_de_puntos.txt", "a");
     if (archivo == NULL) {
@@ -188,7 +185,7 @@ void guardar_puntos(const char* nombre, int puntos) {
     fclose(archivo);
 }
 
-//Funcion para mostrar un numero en formato de 7 segmentos.
+//mostrarNumero formato7Segmentos.
 void mostrar_vida_7_segmentos(int vida_usuario, int vida_ia) {
     const char* segmentos[10][3] = {
         {" _ ", "| |", "|_|"}, // 0
@@ -203,7 +200,7 @@ void mostrar_vida_7_segmentos(int vida_usuario, int vida_ia) {
         {" _ ", "|_|", " _|"}  // 9
     };
 
-    // Imprime cada l�nea de los displays de ambos jugadores en paralelo
+    // Imprime cada linea de las vidas de ambos jugadores en paralelo
     int i;
     for (i = 0; i < 3; i++) {
         printf(PLAYER"\t%s\t\t\t"MAIN, segmentos[vida_usuario][i]);
@@ -214,9 +211,8 @@ void mostrar_vida_7_segmentos(int vida_usuario, int vida_ia) {
 
 
 
+//incluimosPreguntas
 int pregunta() {
-	//Acá están todas las preguntas
-//	int preguntas = 2    ;
 	int respuesta = 1;
 	switch (preguntas) {
 	
@@ -311,35 +307,31 @@ int pregunta() {
 			break;
 
 
-
-		
 		default:
 			return 1;
 			break;
 	}
-	//hacer pregunta sobre display de 7 segmentos, ej "cuales variables (a, b, c, d, e, f, g) hay que encender para hacer el numero 4"
-	//quien gano el mundial en el ano 2022
-	//cuales son los operadores logicos
-	//AGREGAR MAS
 }
 
+//animacionDisparo Beep
 void temporizadorGatillo(){
 	int i;
 	char temporizadorVector[15]="3...2...1...\n";
 	for (i=0;	i<12; i++){
 		printf("%c",temporizadorVector[i]);
-        Beep(750, 200); 
-		//Sleep(100);
+        Beep(750, 200); //sonido parametros (frecuencia,duracion)
 	}
 }
 
+//iniciarPantallaCompleta
 void pantallaCompleta(){
-    keybd_event(VK_MENU, 0, 0, 0);      // Presiona la tecla Alt
-    keybd_event(VK_RETURN, 0, 0, 0);    // Presiona la tecla Enter
+    keybd_event(VK_MENU, 0, 0, 0);      // Simular Presionar la tecla Alt
+    keybd_event(VK_RETURN, 0, 0, 0);    // Simular Presiona la tecla Enter
     keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0);  // Suelta la tecla Enter
     keybd_event(VK_MENU, 0, KEYEVENTF_KEYUP, 0);    // Suelta la tecla Alt   
 }
 
+//asciiArt :)
 void asciiArt(){
     printf(RESET"  (                                 _\n");
     printf("   )                               /=>\n");
@@ -357,7 +349,3 @@ void asciiArt(){
     printf("                               :/_________|\n");
     printf("                                           \n"MAIN);
 }
-
-
-
-

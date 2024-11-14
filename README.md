@@ -16,12 +16,12 @@ fix .Las preguntas no pueden ser aleatorias porque aveces se repiten, se hace se
 # roles
 
 
-## Introducción
+## Introducción(Matilda)
     Nombre del juego, de donde surgió y como fué evolucionando
 
 
 ## Herramientas que usamos y organizacion (Aylen)
-    discord     Trello     github(repositorio)         VisualCode      
+    discord     Trello     github(repositorio)         VisualCode      Canva
 
 
 ## Codigo Preguntas (Noe)
