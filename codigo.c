@@ -18,6 +18,7 @@
 #define PUNTOS_EXTRA 5
 
 void pantallaCompleta();
+int preguntas = 1;
 int pregunta();
 void balas_aleatorias(int tambor[TAMANO][TAMANO]);
 void mostrar_vida_7_segmentos(int vida_usuario, int vida_ia);
@@ -56,8 +57,9 @@ main() {
     printf(MACHINE "maquina" MAIN);
     printf(") consta de responder preguntas.\n");
     printf("Ambos comienzan con 5 vidas.\n");
-    printf("Si uno de los 2 responde bien entonces apunta al enemigo y ""prueba disparar"".\n");
+    printf("Si respondes bien apuntas al enemigo sino te apuntas a vos mismo � probando disparar !.\n");
     printf(LINE"=================================================================================\n"MAIN);
+    asciiArt();
        
      printf("\nPresione ENTER para continuar...");
     getchar();
@@ -82,6 +84,7 @@ main() {
             if (tambor[i][j] == 1) { //Hay bala en el tambor.
                 vida_ia--;
                 printf(ACCEPT "\nEl disparo acerto, la vida del contrincante es ahora de %i.\n" MAIN, vida_ia);
+                Beep(750, 1500); 
             } else {
                 printf(REJECT "\nEl disparo no salio...\n" MAIN);
             }
@@ -91,12 +94,6 @@ main() {
             aciertos_consecutivos++;
             errores_consecutivos = 0;
 
-            //Vida extra para el jugador despues de 3 aciertos consecutivos.
-            if (aciertos_consecutivos == 3 && vida_usuario < MAX_VIDA) {
-                vida_usuario++;
-                printf(PLAYER "Bonus! Has ganado 1 vida adicional.\n" MAIN);
-                aciertos_consecutivos = 0;
-            }
         } else { //El jugador responde incorrectamente.
             printf(REJECT "Su respuesta fue incorrecta, apuntando a usted...\n" MAIN);
             temporizadorGatillo();
@@ -105,6 +102,7 @@ main() {
             if (tambor[i][j] == 1) { //Hay bala en el tambor.
                 vida_usuario--;
                 printf(REJECT "\nEl disparo acerto, tu vida es ahora de %i.\n" MAIN, vida_usuario);
+                Beep(750, 1500); 
             } else {
                 printf(ACCEPT "\nEl disparo no salio...\n" MAIN);
             }
@@ -138,11 +136,12 @@ main() {
 		printf(LINE"\n=================================================================================\n"MAIN);
 		printf(MAIN "\nPresione ENTER para continuar...");
         getchar();
-		
+
+	 preguntas++; //incremeta parar pasar a la siguiente pregunt
     } while (vida_usuario > 0 && vida_ia > 0);
 
     if (vida_usuario > 0) {
-        printf(MAIN "Felicidades ");
+        printf(MAIN "\n\nFelicidades ");
         printf(PLAYER "%s", nombre);
         printf(MAIN "! Ganaste.\n");
         puntos += PUNTOS_EXTRA; //Puntos extra por ganar.
@@ -216,13 +215,33 @@ void mostrar_vida_7_segmentos(int vida_usuario, int vida_ia) {
 
 
 int pregunta() {
-	//Acá están todas las preguntas, están abajo del todo porque su fiaca bajar tanto una y otra vez para arreglar alguna boludés en las otras funciones.
-	int pregunta = rand()%2;
+	//Acá están todas las preguntas
+//	int preguntas = 2    ;
 	int respuesta = 1;
-	switch (pregunta) {
+	switch (preguntas) {
+	
+	
 		case 1: 
-			printf(MAIN"En que continente se encuentra Espana?.\n");
-			printf(RESET"[1] Oceania.\n[2] Asia.\n[3] Europa.\n[4] America del Sur.\n"MAIN);
+				printf(MAIN"Cual puede operarse por producto de matrices?.\n");
+				printf(RESET"[1] 2x3 x 1x3.\n[2] 3x2 x 2x3\n[3] 1x3 x 1x3\n[4] 4x4 x 2x2.\n"MAIN);
+				do {
+					printf("Respuesta: "RESET);
+					scanf("%i", &respuesta);
+					if (respuesta == 2) {
+						return 1;
+					} else if ((respuesta == 1) || (respuesta == 3) || (respuesta == 4)) {
+						return 2;
+					} else {
+						printf(MAIN"Opcion no disponible, por favor, elija una opcion entre las disponibles.\n");
+					}
+					fflush(stdin);
+				} while ((respuesta < 1) || (respuesta > 4));
+				break;
+	
+	
+		case 2: 
+			printf(MAIN"Que valor es 12 en Hexadecimal?.\n");
+			printf(RESET"[1] A.\n[2] B.\n[3] C.\n[4] D.\n"MAIN);
 			do {
 				printf("Respuesta: "RESET);
 				scanf("%i", &respuesta);
@@ -237,20 +256,69 @@ int pregunta() {
 			} while ((respuesta < 1) || (respuesta > 4));
 			break;
 		
+        
+        case 3: 
+			printf(MAIN"Los numeros racionales con la suma forman:\n");
+			printf(RESET"[1] Grupo.\n[2] Monoide.\n[3] Ninguno.\n[4] Grupo abeliano.\n"MAIN);
+			do {
+				printf("Respuesta: "RESET);
+				scanf("%i", &respuesta);
+				if (respuesta == 4) {
+					return 1;
+				} else if ((respuesta == 1) || (respuesta == 2) || (respuesta == 3)) {
+					return 2;
+				} else {
+					printf(MAIN"Opcion no disponible, por favor, elija una opcion entre las disponibles.\n");
+				}
+				fflush(stdin);
+			} while ((respuesta < 1) || (respuesta > 4));
+			break;
+
+
+        case 4: 
+			printf(MAIN"Que es modularizar un codigo?.\n");
+			printf(RESET"[1] Integrar funciones.\n[2] Integrar recursividad.\n[3] Integrar punteros.\n[4] Integrar librerias.\n"MAIN);
+			do {
+				printf("Respuesta: "RESET);
+				scanf("%i", &respuesta);
+				if (respuesta == 1) {
+					return 1;
+				} else if ((respuesta == 4) || (respuesta == 2) || (respuesta == 3)) {
+					return 2;
+				} else {
+					printf(MAIN"Opcion no disponible, por favor, elija una opcion entre las disponibles.\n");
+				}
+				fflush(stdin);
+			} while ((respuesta < 1) || (respuesta > 4));
+			break;
+
+
+        case 5: 
+			printf(MAIN"Que par de simbolos se utilizan en condiciones logicas?.\n");
+			printf(RESET"[1] <+.\n[2] !=.\n[3] +>.\n[4] =-.\n"MAIN);
+			do {
+				printf("Respuesta: "RESET);
+				scanf("%i", &respuesta);
+				if (respuesta == 2) {
+					return 1;
+				} else if ((respuesta == 4) || (respuesta == 3) || (respuesta == 1)) {
+					return 2;
+				} else {
+					printf(MAIN"Opcion no disponible, por favor, elija una opcion entre las disponibles.\n");
+				}
+				fflush(stdin);
+			} while ((respuesta < 1) || (respuesta > 4));
+			break;
+
+
+
+		
 		default:
 			return 1;
 			break;
 	}
 	//hacer pregunta sobre display de 7 segmentos, ej "cuales variables (a, b, c, d, e, f, g) hay que encender para hacer el numero 4"
 	//quien gano el mundial en el ano 2022
-	//pregunta sobre mate discreta (sumas, restas, multiplicacion entre matrices)
-	//determinar si una matriz tiene inversa
-	//cuantas provincias tiene argentina
-	//cual es la capital de "x" provincia
-	//cual es la principal causa de muertes en la era actual
-	//quien fue el presidente de argentina durante el periodo "x al x"
-	//pregunta sobre San Martin
-	//preguntas sobre la 2da guerra mundial y guerra fria
 	//cuales son los operadores logicos
 	//AGREGAR MAS
 }
@@ -260,7 +328,8 @@ void temporizadorGatillo(){
 	char temporizadorVector[15]="3...2...1...\n";
 	for (i=0;	i<12; i++){
 		printf("%c",temporizadorVector[i]);
-		Sleep(200);
+        Beep(750, 200); 
+		//Sleep(100);
 	}
 }
 
@@ -270,3 +339,25 @@ void pantallaCompleta(){
     keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0);  // Suelta la tecla Enter
     keybd_event(VK_MENU, 0, KEYEVENTF_KEYUP, 0);    // Suelta la tecla Alt   
 }
+
+void asciiArt(){
+    printf(RESET"  (                                 _\n");
+    printf("   )                               /=>\n");
+    printf("  (  +____________________/\/\___ / /|\n");
+    printf("   .''._____________'._____      / /|/\n");
+    printf("  : () :              :\ ----\|    \ )\n");
+    printf("   '..'______________.'0|----|      \\\n");
+    printf("                    0_0/____/        \\\n");
+    printf("                        |----    /----\\\n");
+    printf("                       || -\\ --|      \\\n");
+    printf("                       ||   || ||\      \\\n");
+    printf("                        \\____// '|      \\\n");
+    printf("Buckshot Roulette!              .'/       |\n");
+    printf("                               .:/        |\n");
+    printf("                               :/_________|\n");
+    printf("                                           \n"MAIN);
+}
+
+
+
+
